@@ -18,7 +18,7 @@ training:
     validation_freq: 2500
 
 sampling:
-    batch_size: 1
+    batch_size: 4
     last_only: True
     sampling_path : ""  # source_image
     shot: 50

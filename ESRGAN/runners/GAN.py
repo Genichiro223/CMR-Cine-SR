@@ -248,14 +248,25 @@ class GAN(object):
         
         store_list = []
         
-        for idx, (source, target) in tqdm.tqdm(enumerate(testing_loader)):  
-            
-            source, target = torch.unsqueeze(source.to(self.device), dim=1), torch.unsqueeze(target.to(self.device), dim=1)
-            sr_sample = gen(source.float()).detach().to('cpu').numpy()  # 将样本传入模型 并将输出结果转移到cpu上
-            concat_sample = np.concatenate((source.to('cpu').numpy(), sr_sample, target.to('cpu').numpy()), axis=1)  # 将三个样本拼接起来
+        for idx, (source, target) in tqdm.tqdm(enumerate(testing_loader)):
+            b, c, f, h, w = source.shape
+            source = einops.rearrange(source, 'b c f h w ->  (b f) c h w' ).to(self.device)  
+            with torch.no_grad():
+                result = gen(source.float()).detach().to('cpu').numpy()
+            result = einops.rearrange(result, '(b f) c h w -> b c f h w', b=b, f=f)
+            source_image = einops.rearrange(source_image, '(b f) c h w -> b c f h w', b=b, f=f)
+            concat_sample = np.concatenate([source_image, result, target.numpy()], axis=1)    
             store_list.append(concat_sample)
-            if idx % config.sampling.shot == 0:  # 没执行shot步，对结果保存一次
-                store_array = np.concatenate(store_list, axis=0)
-                np.save(os.path.join(self.args.image_folder, f"{idx}.npy"), store_array)
+            np.save(os.path.join(args.image_folder, f"sample_batch{idx}.npy"), concat_sample)
+        np.save(os.path.join(self.args.image_folder, f"total_batch.npy"), np.concatenate(store_list, axis=0))      
         
-        np.save(os.path.join(self.args.image_folder, f"GAN_final.npy"), store_array)
+            # source, target = torch.unsqueeze(source.to(self.device), dim=1), torch.unsqueeze(target.to(self.device), dim=1)
+            # sr_sample = gen(source.float()).detach().to('cpu').numpy()  # 将样本传入模型 并将输出结果转移到cpu上
+            
+        #     concat_sample = np.concatenate((source.to('cpu').numpy(), sr_sample, target.to('cpu').numpy()), axis=1)  # 将三个样本拼接起来
+        #     store_list.append(concat_sample)
+        #     if idx % config.sampling.shot == 0:  # 没执行shot步，对结果保存一次
+        #         store_array = np.concatenate(store_list, axis=0)
+        #         np.save(os.path.join(self.args.image_folder, f"{idx}.npy"), store_array)
+        
+        # np.save(os.path.join(self.args.image_folder, f"GAN_final.npy"), store_array)

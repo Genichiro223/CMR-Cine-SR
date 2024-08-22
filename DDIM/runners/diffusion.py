@@ -325,9 +325,9 @@ class Diffusion(object):
                     [source_image, result, target.numpy()], axis=1
                 )
                 store_list.append(concat_sample)
-                np.save(os.path.join(self.args.image_folder, f"sample_batch{idx}.npy"), concat_sample)
+                np.save(os.path.join(args.image_folder, f"sample_batch{idx}.npy"), concat_sample)
         
-        np.save(os.path.join(self.args.image_folder, f"total_batch.npy"), np.concatenate(store_list, axis=0))       
+        np.save(os.path.join(args.image_folder, f"total_batch.npy"), np.concatenate(store_list, axis=0))       
         
         
     def sample_image(self, initial_noise, source_image, model, last=True):
