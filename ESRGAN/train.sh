@@ -1,0 +1,1 @@
+python main.py --config cine.yml --exp /data/liaohx/Cine_Super_Resolution/Experiment_results/ESRGAN/v0_0819 --doc single_frame_sr 

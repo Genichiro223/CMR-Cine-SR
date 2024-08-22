@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JupyterPersistentConnectionParameters">
+    <option name="moduleParameters">
+      <map>
+        <entry key="/var/folders/0g/1f7518w541ndjtqfnvls6tjm0000gn/T/Untitled-1.ipynb3003865245862323418/.idea/Untitled-1.ipynb3003865245862323418.iml">
+          <value>
+            <JupyterConnectionParameters>
+              <option name="managed" value="true" />
+              <option name="sdkHomePath" value="$USER_HOME$/anaconda3/envs/pytorch_env/bin/python" />
+            </JupyterConnectionParameters>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

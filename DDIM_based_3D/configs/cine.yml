@@ -1,0 +1,73 @@
+data:
+    dataset: "CINE"
+    image_size: 128
+    logit_transform: false
+    uniform_dequantization: false
+    gaussian_dequantization: false
+    random_flip: true
+    rescaled: true
+    num_workers: 2
+    training_dataset_path: /data/liaohx/Cine_Super_Resolution/Data/Hamming/data_processed_0726.npy
+    #/data/liaohx/Cine_Super_Resolution/NewDataProcessing/In_House/Code/Detect_Heart/mixed_training_set.npy  # mixed training set
+    testing_dataset_path: /data/liaohx/Cine_Super_Resolution/Data/Hamming/data_processed_0726.npy
+    #/data/liaohx/Cine_Super_Resolution/Data/Non_Hamming/processed_data/training_set.npy
+    #/
+    #/data/liaohx/Cine_Super_Resolution/NewDataProcessing/In_House/Code/Detect_Heart/ih_training_set.npy
+    #/data/liaohx/Cine_Super_Resolution/NewDataProcessing/In_House/Code/RCdataset.npy
+    #/data/liaohx/Cine_Super_Resolution/NewDataProcessing/In_House/Code/Detect_Heart/ih_testing_set.npy
+    # /data/liaohx/Cine_Super_Resolution/NewDataProcessing/In_House/Code/RCdataset.npy
+    # /data/liaohx/Cine_Super_Resolution/Data/Non_Hamming/processed_data/testing_set.npy
+    # /data/liaohx/Cine_Super_Resolution/NewDataProcessing/In_House/Code/RCdataset.npy
+    #/data/liaohx/Cine_Super_Resolution/Data/Non_Hamming/processed_data/testing_set.npy
+
+model:
+    type: "simple"
+    in_channels: 2
+    out_ch: 1
+    ch: 128
+    ch_mult: [1, 1, 2, 2, 4, 4]
+    num_res_blocks: 2
+    attn_resolutions: [16, ]
+    dropout: 0.1
+    var_type: fixedsmall  # 方差选择
+    ema_rate: 0.999
+    num_head: 8
+    ema: True
+    resamp_with_conv: True
+
+diffusion:
+    beta_schedule: linear
+    beta_start: 0.0001
+    beta_end: 0.02
+    num_diffusion_timesteps: 1000
+
+training:
+    batch_size: 1
+    n_epochs: 10000
+    n_iters: 50000
+    snapshot_freq: 5000
+    validation_freq: 200
+
+sampling:
+    shot: 50
+    batch_size: 5
+    last_only: True
+    ckpt_id:
+    sampling_path : 
+    #/data/liaohx/Cine_Super_Resolution/316LR.npy
+    #/data/liaohx/Cine_Super_Resolution/concat_RT.npy
+    # "/data/liaohx/Cine_Super_Resolution/Data/Hamming/processed_data/testing_set.npy"  # source_image
+    num_measurement : 4
+
+optim:
+    weight_decay: 0.000
+    optimizer: "Adam"
+    lr: 0.00002
+    beta1: 0.9
+    amsgrad: false
+    eps: 0.00000001
+
+# python main.py --config cine.yml --exp /data/liaohx/Cine_Super_Resolution/Experiment_results/DDIM/Non_Hamming/ --doc non_hamming --sample --sequence --timesteps 100 --eta 1 --ni
+# tensorboard --logdir=/home/liaohx/DDIM4CineSR/outlogs/tensorboard --port=8008
+# python main.py --config cine.yml --exp /data/liaohx/Cine_Super_Resolution/Experiment_results/DDIM/0423 --doc non_hamming
+# python main.py --config cine.yml --exp /data/liaohx/Cine_Super_Resolution/Experiment_results/DDIM/0531 --doc non_hamming --ni
